@@ -18,7 +18,7 @@
 
 <body>
 	<h1>Welcome!</h1>
-	Hi All hope  you are reading this message then the installation has gone well and the application is running. Congratulations All!!
+	If you are reading this message then the installation has gone well and the application is running. Congratulations All!!
 	<form name="skl_form" class="form-inline" role="form" method="post" action="login_controller.jsp">
 		<div class="form-group">
 			<label class="" for="Login">Login &nbsp;&nbsp;</label> <input type="text" name="uid" class="form-control">
