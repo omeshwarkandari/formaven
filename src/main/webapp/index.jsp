@@ -29,7 +29,7 @@
 		<br><br>
 		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Go ahead, try it!</a>
 	</form>
-	<br><br>Application version changed for Master-Slave Mode - v3
+	<br><br>Application version changed for Master-Slave Mode - v1
 </body>
 
 </html>
