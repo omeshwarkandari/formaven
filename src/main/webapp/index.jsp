@@ -18,18 +18,17 @@
 
 <body>
 	<h1>Welcome!</h1>
-	Hi if you are reading this message then the installation has gone well and the application is running. Congratulations All!!
 	<form name="skl_form" class="form-inline" role="form" method="post" action="login_controller.jsp">
 		<div class="form-group">
 			<label class="" for="Login">Login &nbsp;&nbsp;</label> <input type="text" name="uid" class="form-control">
 			<br/>Type in your first name<br/>
 			<label class="" for="Password">Password &nbsp;&nbsp;</label> <input type="password" name="pwd" class="form-control">
-			<br/>The password is hard coded as admin123
+			<br/>The password shoulb be 8-digits
 		</div>
 		<br><br>
-		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Go ahead, try it!</a>
+		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Your feedback matters!</a>
 	</form>
-	<br><br>Application version changed for the MVN Project - v1
+	<br><br>Test Application version changed for the MVN Project - v1
 </body>
 
 </html>
