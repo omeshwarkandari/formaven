@@ -16,7 +16,7 @@ node{
 
    
   stage('Deploy Dev'){
-	  sh 'mv target/myweb*.war target/myweb.war' 
+	  sh 'mv target/HelloWorld-1*.war target/HelloWorld-1.war' 
 	   
       sshagent(['tomcat-dev']) {
 			 sh "${stopTomcat}"
