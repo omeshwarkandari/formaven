@@ -1,6 +1,6 @@
 node{
    def tomcatIp = '172.31.62.132'
-   def tomcatUser = 'tomcat'
+   def tomcatUser = 'ubuntu'
    def stopTomcat = "ssh ${tomcatUser}@${tomcatIp} /apache-tomcat-9.0.44/bin/shutdown.sh"
    def startTomcat = "ssh ${tomcatUser}@${tomcatIp} /apache-tomcat-9.0.44/bin/startup.sh"
    def copyWar = "scp -o StrictHostKeyChecking=no target/HelloWorld-1.war ${tomcatUser}@${tomcatIp}:/apache-tomcat-9.0.44/webapps/"
@@ -18,10 +18,10 @@ node{
   stage('Deploy Dev'){
 	  sh 'mv target/HelloWorld-1*.war target/HelloWorld-1' 
 	   
-      sshagent(['tomcat-dev']) {
-			 sh "${stopTomcat}"
+	  sshagent(['deploy']) {
+		   sh "${stopTomcat}"
 			 sh "${copyWar}"
 			 sh "${startTomcat}"
-	    }
+          }   
    }
 }
