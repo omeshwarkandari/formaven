@@ -1,12 +1,10 @@
 pipeline {
-	tools {
-    		maven 'maven3.6'
- 	}
 	agent any
 	stages {
 		stage('---clean---') {
 			steps {
-				sh "mvn clean"
+				def mvnHome = tool name: 'Apache Maven 3.6.0', type: 'maven'
+    				sh "${mvnHome}/bin/mvn -B -DskipTests clean package"
 			}
 
 		}
