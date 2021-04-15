@@ -1,21 +1,11 @@
-pipeline {
-	agent any
-	stages {
-		stage('---clean---') {
-			steps {
-		          	sh "mvn clean"
-			}
+node {
 
-		}
-		stage('---test---') {
-			steps {
-				sh "mvn test"
-			}
-		}
-		stage('---package---') {
-			steps {
-				sh "mvn package"
-			}
-		}
+	stage('SCM Checkout') {
+		git 'https://github.com/omeshwarkandari/formaven.git'
 	}
+	
+	stage('Compile-Package'){
+		sh 'mvn package'
+	}
+	
 }
