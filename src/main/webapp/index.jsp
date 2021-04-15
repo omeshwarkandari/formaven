@@ -28,7 +28,7 @@
 		<br><br>
 		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Your feedback matters!</a>
 	</form>
-	<br><br>Test Application version changed for the MVN Project - v2
+	<br><br>Test Application version changed for the MVN Project - v1
 </body>
 
 </html>
