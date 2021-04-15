@@ -5,7 +5,7 @@ pipeline {
 			steps {
 		          	// Get Maven Home Path
 					def mvnHome = tool name: 'maven3.6', type: 'maven'
-					sh "${mvnHome}/bin/mvn package"
+					sh "${mvnHome}//home/ubuntu/apache-maven-3.6.3 package"
 			}
 		}
 		stage('---test---') {
