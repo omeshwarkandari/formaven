@@ -1,27 +1,22 @@
 node{
-   def tomcatIp = '54.237.23.131'
-   def tomcatUser = 'ubuntu'
-   def stopTomcat = "ssh ${tomcatUser}@${tomcatIp} /apache-tomcat-9.0.44/bin/shutdown.sh"
-   def startTomcat = "ssh ${tomcatUser}@${tomcatIp} /apache-tomcat-9.0.44/bin/startup.sh"
-   def copyWar = "scp -o StrictHostKeyChecking=no target/HelloWorld-1.war ${tomcatUser}@${tomcatIp}:/apache-tomcat-9.0.44/webapps/"
    
   stage('SCM Checkout') {
     git 'https://github.com/omeshwarkandari/formaven.git'
   }
 
-  stage('Compile-Package'){
+  stage('Build'){
           def mvnHome = tool name: 'maven3.6', type: 'maven'
     sh "${mvnHome}/bin/mvn clean package"
   }
 
    
-  stage('Deploy Dev'){
-	  sh 'mv target/HelloWorld-1*.war target/HelloWorld-1' 
-	   
-	  sshagent(['deploy']) {
-		   sh "${stopTomcat}"
-			 sh "${copyWar}"
-			 sh "${startTomcat}"
-          }   
-   }
+  stage('Deploy'){
+    sh 'mv target/HelloWorld-1*.war target/HelloWorld-1' 
+     
+    sshagent(['deploy']) {
+
+        sh "scp -o StrictHostKeyChecking=no /target/HelloWorld-1.war.original ubuntu@172.31.62.132:/apache-tomcat-9.0.44/webapps"
+                
+    }   
+  }
 }
