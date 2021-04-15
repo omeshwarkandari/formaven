@@ -3,7 +3,8 @@ pipeline {
 	stages {
 		stage('---clean---') {
 			steps {
-		          	sh "mvn clean"
+		          	def mvnHome = tool name: 'maven3.6', type: 'maven'
+				sh "${mvnHome}/bin/mvn clean package"
 			}
 		}
 		stage('---test---') {
