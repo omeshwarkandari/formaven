@@ -28,7 +28,7 @@
 		<br><br>
 		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Your feedback matters!</a>
 	</form>
-	<br><br>Final Test - v1
+	<br><br>Final Test - v2
 </body>
 
 </html>
