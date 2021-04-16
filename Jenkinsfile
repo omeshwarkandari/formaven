@@ -12,7 +12,7 @@ node{
    
   stage('Deploy'){     
        sshagent(['Test-Deploy']) {
-         sh "scp -o StrictHostKeyChecking=no /target/HelloWorld-1.war ubuntu@172.31.52.3:/apache-tomcat-9.0.44/webapps" 
+         sh "scp -o StrictHostKeyChecking=no /target/HelloWorld.war ubuntu@172.31.52.3:/apache-tomcat-9.0.44/webapps" 
       }
   }
 }
