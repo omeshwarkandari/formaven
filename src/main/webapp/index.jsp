@@ -28,7 +28,7 @@
 		<br><br>
 		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Your feedback matters!</a>
 	</form>
-	<br><br>CICD Pipeline Test - V2
+	<br><br>CICD Pipeline Test - V1
 </body>
 
 </html>
