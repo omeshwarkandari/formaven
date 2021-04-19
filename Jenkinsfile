@@ -1,18 +1,10 @@
-pipeline {
-	agent any
-	tools {
-		maven 'Maven3.6.3'
+node {
+	stage('SCM Checkout') {
+		git 'https://github.com/omeshwarkandari/formaven.git'
 	}
-	stages {
-		stage('SCM Checkout') {
-			steps {
-				git 'https://github.com/omeshwarkandari/formaven.git'
-			}
-		}			
-		stage('Build'){
-			steps {
-				sh 'mvn clean build'
-			}						        
-		}
-	}	
-}
+
+	stage('Compile-Package'){
+	        def mvnHome = tool name: 'maven3.6', type: 'maven'
+		sh "${mvnHome}/bin/mvn clean package"
+	}
+}	
