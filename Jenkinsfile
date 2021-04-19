@@ -1,5 +1,8 @@
 pipeline {
 	agent any
+	tools {
+		maven 'Maven'
+	}
 	stages {
 		stage('SCM Checkout') {
 		git 'https://github.com/omeshwarkandari/formaven.git'
