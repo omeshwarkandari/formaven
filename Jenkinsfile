@@ -1,4 +1,4 @@
-node {
+node ('node-2') {
 	stage('SCM Checkout') {
 		git 'https://github.com/omeshwarkandari/formaven.git'
 	}
