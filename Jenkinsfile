@@ -1,15 +1,20 @@
 pipeline {
 	agent any
-	tools {
-		maven 'maven3.6'
-	}
 	stages {
-		stage('SCM Checkout') {
-		git 'https://github.com/omeshwarkandari/formaven.git'
+		stage('---build---') {
+			steps {
+				echo 'building an application'		          	
+			}
 		}
-
-		stage('Build'){
-	        sh  'maven build'
+		stage('---test---') {
+			steps {
+				echo 'testing an application'	
+			}
+		}
+		stage('---package---') {
+			steps {
+				echo 'deploying an application'	
+			}
 		}
 	}
 }
