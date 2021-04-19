@@ -1,7 +1,7 @@
 pipeline {
 	agent any
 	tools {
-		def mvnHome = tool name: 'maven3.6', type: 'maven'
+		 mvnHome = tool name: 'maven3.6', type: 'maven'
 	}
 	stages {
 		stage('SCM Checkout') {
