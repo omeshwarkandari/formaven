@@ -4,12 +4,15 @@ pipeline {
 		maven 'Maven3.6'
 	}
 	stages {
-
 		stage('SCM Checkout') {
-			git 'https://github.com/omeshwarkandari/formaven.git'
+			steps {
+				git 'https://github.com/omeshwarkandari/formaven.git'
+			}
 		}
 		stage('Build'){
-		        sh  script: 'mvn clean package'
+			steps {
+		        	sh  script: 'mvn clean package'
+			}
 		}
 	}	
 }
