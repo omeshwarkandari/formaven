@@ -11,8 +11,7 @@ pipeline {
 		}			
 		stage('Build'){
 			steps {
-				withMaven(maven : 'maven_3_6_3') 
-	                    sh 'mvn clean build'
+				sh 'mvn clean build'
 			}						        
 		}
 	}	
