@@ -1,18 +1,18 @@
 pipeline {
-	agent any
-	tools {
-		maven 'Maven3.6.3'
-	}
-	stages {
-		stage('SCM Checkout') {
-			steps {
-				git 'https://github.com/omeshwarkandari/formaven.git'
-			}
-		}			
-		stage('Build'){
-			steps {
-				sh 'mvn clean build'
-			}						        
-		}
-	}	
-}
+    agent any
+    environment {
+        PATH = "/opt/maven/apache-maven-3.6.3/bin:$PATH"
+    }
+    stages {
+        stage("clone code"){
+            steps{
+                git 'https://github.com/omeshwarkandari/formaven.git'
+            }
+        }
+        stage("build code"){
+            steps{
+                sh "mvn clean install"
+            }
+        }
+    } 
+}       
