@@ -15,7 +15,7 @@ pipeline {
 	                    sh 'mvn clean build'
 			}						        
 		}
-		tage('Deploy'){  
+		stage('Deploy'){  
 			steps {
 				sshagent(['tomcat'])
 				sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.27.119:/opt/apache-tomcat-8.5.65/webapps"
