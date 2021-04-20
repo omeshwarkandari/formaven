@@ -1,6 +1,6 @@
 pipeline {
 	agent {
-	 	sshagent(['tomcat'])
+	 	sshagent 'tomcat'
 	}
 	tools {
 		maven 'Maven3.6.3'
