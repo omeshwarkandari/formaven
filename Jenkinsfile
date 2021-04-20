@@ -1,9 +1,7 @@
 pipeline {
-	agent {
-	 	sshagent 'tomcat'
-	}
+	agent any
 	tools {
-		maven 'Maven3.6.3'
+		maven 'Maven3.6'
 	}
 	stages {
 		stage('SCM Checkout') {
@@ -17,11 +15,11 @@ pipeline {
 	                    sh 'mvn clean build'
 			}						        
 		}
-		stage('Deploy'){  
+		tage('Deploy'){  
 			steps {
+				sshagent(['tomcat'])
 				sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.27.119:/opt/apache-tomcat-8.5.65/webapps"
-			}   
-        	
+			}        	
       	}
 	}	
 }
