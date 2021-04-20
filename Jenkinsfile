@@ -1,17 +1,27 @@
-node{
-   
-  stage('SCM Checkout') {
-    git 'https://github.com/omeshwarkandari/formaven.git'
-  }
-
-  stage('Build'){
-         def mvnHome = tool name: 'Maven3.6.3', type: 'maven'
-		   sh "${mvnHome}/bin/mvn clean package"
-  }
-   
-  stage('Deploy'){     
-      sshagent(['tomcat']) {
-        sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.27.119:/opt/apache-tomcat-8.5.65/webapps"
-      }
-  }
+pipeline {
+	agent {
+	 	sshagent(['tomcat'])
+	}
+	tools {
+		maven 'Maven3.6'
+	}
+	stages {
+		stage('SCM Checkout') {
+			steps {
+				git 'https://github.com/omeshwarkandari/formaven.git'
+			}
+		}			
+		stage('Build'){
+			steps {
+				withMaven(maven : 'maven_3_6_3') 
+	                    sh 'mvn clean build'
+			}						        
+		}
+		tage('Deploy'){  
+			steps {
+				sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.27.119:/opt/apache-tomcat-8.5.65/webapps"
+			}   
+        	
+      	}
+	}	
 }
