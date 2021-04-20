@@ -28,7 +28,7 @@
 		<br><br>
 		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Your feedback matters!</a>
 	</form>
-	<br><br>SCM CICD Pipeline Test - version1
+	<br><br>Declarative Pipeline - version1
 </body>
 
 </html>
