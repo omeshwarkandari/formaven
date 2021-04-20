@@ -6,12 +6,19 @@ pipeline {
     stages {
         stage("clone code"){
             steps{
-               git 'https://github.com/omeshwarkandari/formaven.git'
+                git 'https://github.com/omeshwarkandari/formaven.git'
             }
         }
         stage("build code"){
             steps{
-              sh "mvn clean install"
+                sh "mvn clean install"
+            }
+        }
+        stage ('Testing Stage') {
+            steps {
+                withMaven(maven : 'maven') {
+                    sh 'mvn test'
+                }
             }
         }
     } 
