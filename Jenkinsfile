@@ -3,7 +3,7 @@ pipeline {
 	 	sshagent(['tomcat'])
 	}
 	tools {
-		maven 'Maven3.6'
+		maven 'Maven3.6.3'
 	}
 	stages {
 		stage('SCM Checkout') {
