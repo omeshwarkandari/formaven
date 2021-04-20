@@ -1,25 +1,10 @@
-pipeline {
-    agent any
-    environment {
-        PATH = "/opt/maven/apache-maven-3.6.3/bin:$PATH"
-    }
-    stages {
-        stage("clone code"){
-            steps{
-                git 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
-            }
-        }
-        stage ('Deployment Stage') {
-            steps {
-                withMaven(maven : 'maven') {
-                    sh 'mvn deploy'
-                }
-            }
-        }
-    } 
-}       
+node {
+	stage('SCM Checkout') {
+		git 'https://github.com/omeshwarkandari/formaven.git'
+	}
+
+	stage('Compile-Package'){
+	        def mvnHome = tool name: 'maven3.6', type: 'maven'
+		sh "${mvnHome}/bin/mvn clean package"
+	}
+}	
