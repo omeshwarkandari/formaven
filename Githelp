@@ -112,6 +112,14 @@ Hello World!
 # Conflict with the different update e.g. Location
 
 Resolution: either bot the deveopers will dscuss in person to come to a common/best commit or use third party tools for long/comlex codes.
+In this case the file was  updated with both the Location and commit/push was done.
+$ sudo nano Info
+Code will be changed
+Location: Mumbai
+Location: Bangalore
+Hello World!
+$ git commit -am "final update"
+$ git push origin master
 
 
   
