@@ -50,7 +50,11 @@ Dev1 and Dev2 updated the Source Code but Dev1 updated it in a feature branch af
 How to simulate the issue:
 #reate a file Info in master with some data, Craete a Branch dev1 and let two developers (contrubutor working on dev1 and Local on Master) edit the file Info
 # Cont will swicth to dev1 branch and clone the Master Repo e.f. formaven and while edit/commit the changes in the file Info, at the same time Local will clone/edit/merge/push changes
-Info File contents: 
+e.g. Info File content are below so while dev1 updates location to Banaglore the Local dev changes to Mumbai: 
+Code will be changed
+Location: 
+Hello World!
+
 $ git branchn
 * master
 
@@ -80,6 +84,7 @@ $ sudo nano Info
 $ git commit -am "local"
 $ git push
 # If we observe Info file on the Master then it will show updates done by the Local Developer
+( Code will be changed   Location: Mumbai  Hello World!)
 # Cont Developer is now in the process of merger so lets swicth to dev1 brach
 $ git checkout dev1
 * dev1
@@ -94,7 +99,6 @@ error:
 Auto-merging Info
 CONFLICT (content): Merge conflict in Info
 Automatic merge failed; fix conflicts and then commit the result.
-so either bot the deveopers will dscuss in person to come to a common/best commit or use third party tools for long/comlex codes.
 We can observe the conflicts:
 $ cat Info
 Code will be changed
@@ -104,7 +108,10 @@ Location: Mumbai
 Location: Bangalore
 >>>>>>> dev1
 Hello World!
- 
-  
+# No conflict with the common updates or no chnages in the original file  e.g. Code will be changed Hello World!
+# Conflict with the different update e.g. Location
+
+Resolution: either bot the deveopers will dscuss in person to come to a common/best commit or use third party tools for long/comlex codes.
+
 
   
