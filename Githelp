@@ -1,0 +1,46 @@
+Process to clone and add a repository on the Local System:
+
+1.	Check the status of added remote or any other repo if any 
+$ git remote –v
+
+2.	Remove repo if any 
+$ git remote rm origin
+
+3.	Clone the new repo
+$ git clone https://github.com/omeshwarkandari/formaven.git
+
+4.	Add the new repo
+$ git remote add origin https://github.com/omeshwarkandari/formaven.git
+
+5.	Check the repo status and for this case fetch/push should be below.
+$ git remote –v
+origin	https://github.com/omeshwarkandari/formaven.git (fetch)
+origin	https://github.com/omeshwarkandari/formaven.git (push)
+
+6.	Configure the access for new Repo Global and Local if needed
+$ git config --global user.email " omeshwarkandari@gmail.com"
+$ git-clone@ubuntu:~$ git config --global user.name "omeshwarkandari"
+
+7.	Go to new Repo
+$ cd formaven/
+
+8.	Do the changes 
+$ sudo nano src/main/webapp/index.jsp
+
+9.	Add and commit the changes
+$ git commit -am "Test1"
+
+10.	 Git Push
+$ git push https://github.com/omeshwarkandari/formaven.git
+
+Source Code changes will be pushed to Jenkins based on the Git Repo integration and Crone Job settings.
+
+Conflict Handling
+Git Push rejected because current branch is behines Master due to commits directly on Master
+$ git status  ( to understand detailed info on deviation)
+$ git reset --hard HEAD~1 
+$ git pull ( Local/current branch will be in sync with remote Master Branch now)
+$ git status ( nothing to commit, working tree clean and now we can commit changes from the current branch to Master)
+Change the code and commit
+$ git commit -am "xyz"
+$ git push
