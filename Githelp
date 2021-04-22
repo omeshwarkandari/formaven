@@ -44,3 +44,67 @@ $ git status ( nothing to commit, working tree clean and now we can commit chang
 Change the code and commit
 $ git commit -am "xyz"
 $ git push
+
+Merge Conflict:
+Dev1 and Dev2 updated the Source Code but Dev1 updated it in a feature branch after cloning Master while Dev2 also clone Master in local system but updated directly on the Master.
+How to simulate the issue:
+#reate a file Info in master with some data, Craete a Branch dev1 and let two developers (contrubutor working on dev1 and Local on Master) edit the file Info
+# Cont will swicth to dev1 branch and clone the Master Repo e.f. formaven and while edit/commit the changes in the file Info, at the same time Local will clone/edit/merge/push changes
+Info File contents: 
+$ git branchn
+* master
+
+#Create a Branch Dev1 
+$ git branch dev1
+$ git branch
+  dev1
+* master
+
+#Cont will switch to dev1 branch and commit changes
+$ git checkout dev1
+Switched to branch 'dev1'
+$ git branch
+* dev1
+  maste
+$ git pull origin master
+$ sudo nano Info
+$ git commit -am "dev1"
+
+# Local Developer will the same time clone the Master on local systema and push the changes
+$ git checkout master
+$ git branch
+  dev1
+* master
+$ git pull origin master
+$ sudo nano Info
+$ git commit -am "local"
+$ git push
+# If we observe Info file on the Master then it will show updates done by the Local Developer
+# Cont Developer is now in the process of merger so lets swicth to dev1 brach
+$ git checkout dev1
+* dev1
+ master
+ # Even after git pull the Info file will show the original chnages and not the updated one from Local Dev because we are in Branch so Cont Dev will first merge his changes
+ $ git pull
+Already up to date.
+ $ nano Info 
+ $ git checkout master
+ $ git merge dev1
+error: 
+Auto-merging Info
+CONFLICT (content): Merge conflict in Info
+Automatic merge failed; fix conflicts and then commit the result.
+so either bot the deveopers will dscuss in person to come to a common/best commit or use third party tools for long/comlex codes.
+We can observe the conflicts:
+$ cat Info
+Code will be changed
+<<<<<<< HEAD
+Location: Mumbai
+=======
+Location: Bangalore
+>>>>>>> dev1
+Hello World!
+ 
+  
+
+  
