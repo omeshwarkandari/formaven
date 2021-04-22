@@ -32,10 +32,10 @@ $ git commit -am "Test1"
 
 10.	 Git Push
 $ git push https://github.com/omeshwarkandari/formaven.git
-
 Source Code changes will be pushed to Jenkins based on the Git Repo integration and Crone Job settings.
 
-Conflict Handling
+Conflict Handling:
+
 Git Push rejected because current branch is behines Master due to commits directly on Master
 $ git status  ( to understand detailed info on deviation)
 $ git reset --hard HEAD~1 
@@ -54,16 +54,13 @@ e.g. Info File content are below so while dev1 updates location to Banaglore the
 Code will be changed
 Location: 
 Hello World!
-
 $ git branchn
 * master
-
 #Create a Branch Dev1 
 $ git branch dev1
 $ git branch
   dev1
 * master
-
 #Cont will switch to dev1 branch and commit changes
 $ git checkout dev1
 Switched to branch 'dev1'
@@ -73,7 +70,6 @@ $ git branch
 $ git pull origin master
 $ sudo nano Info
 $ git commit -am "dev1"
-
 # Local Developer will the same time clone the Master on local systema and push the changes
 $ git checkout master
 $ git branch
