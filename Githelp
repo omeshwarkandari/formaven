@@ -34,6 +34,26 @@ $ git commit -am "Test1"
 $ git push https://github.com/omeshwarkandari/formaven.git
 Source Code changes will be pushed to Jenkins based on the Git Repo integration and Crone Job settings.
 
+11. Craete a branch from Local System
+$ git branch
+  dev1
+* master
+$ git branch stage  # Create a new branch stage
+$ git branch
+  dev1
+* master
+  stage
+  
+12. Remove a branch from Local System
+$ git branch -d stage
+Deleted branch stage (was 524fa3e).
+$ git branch
+  dev1
+* master
+
+
+
+
 Conflict Handling:
 
 Git Push rejected because current branch is behines Master due to commits directly on Master
