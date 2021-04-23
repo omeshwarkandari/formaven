@@ -86,8 +86,19 @@ $ git branch
   New
   master
 * stage
-
 # Now we will delete a branch to simulate Multi Branch working which says Pipeline triggers only for the branches with jenkinsfile....to be followed in the Jenkins Config.
+$ git branch -d New
+$ git branch
+  master
+* stage
+# Deleting a branch locally does not delete the branch from the Master Repo so use "$ git push <remote_repo> --delete <remote_branch>"
+$ git push https://github.com/omeshwarkandari/formaven.git --delete New
+Username for 'https://github.com': omeshwarkandari
+Password for 'https://omeshwarkandari@github.com':
+To https://github.com/omeshwarkandari/formaven.git
+ - [deleted]         New
+
+
 
 
 Conflict Handling:
