@@ -13,7 +13,7 @@ pipeline {
 		}
 		stage('---package---') {
 			steps {
-				echo 'deploying an application'	
+				echo 'deploying an application uisng webhook'	
 			}
 		}
 	}
