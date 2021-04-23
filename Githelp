@@ -51,7 +51,43 @@ $ git branch
   dev1
 * master
 
+13. In case Original Repo on Github has branches craeted but local repo does not show e.g we have two branched New and stage under Master branch
+, however, local repo does not reflect even after git pull then we can use git fetch from origin
+$ git pull origin master
+$ git branch
+* master
+$ git checkout New
+error: pathspec 'New' did not match any file(s) known to git
 
+#Git fetch will help in cloning all the branches
+$ git fetch origin
+remote: Enumerating objects: 12, done.
+remote: Counting objects: 100% (11/11), done.
+remote: Compressing objects: 100% (6/6), done.
+remote: Total 6 (delta 4), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (6/6), 1.46 KiB | 57.00 KiB/s, done.
+From https://github.com/omeshwarkandari/formaven
+   524fa3e..93b0ba2  master     -> origin/master
+ * [new branch]      New        -> origin/New
+ * [new branch]      stage      -> origin/stage
+# git branch will show only Master but git chekout will be successful now which failed earlier for New branch.
+$ git branch  
+* master
+$ git checkout New
+Branch 'New' set up to track remote branch 'New' from 'origin'.
+Switched to a new branch 'New'
+$ git branch
+* New
+  master
+$ git checkout stage
+Branch 'stage' set up to track remote branch 'stage' from 'origin'.
+Switched to a new branch 'stage'
+$ git branch
+  New
+  master
+* stage
+
+# Now we will delete a branch to simulate Multi Branch working which says Pipeline triggers only for the branches with jenkinsfile....to be followed in the Jenkins Config.
 
 
 Conflict Handling:
