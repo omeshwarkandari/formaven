@@ -8,7 +8,7 @@ pipeline {
 		}
 		stage('---test---') {
 			steps {
-				echo 'testing an application'	
+				echo 'testing an application based on webhook'	
 			}
 		}
 		stage('---package---') {
