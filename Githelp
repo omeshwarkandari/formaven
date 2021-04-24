@@ -99,8 +99,9 @@ To https://github.com/omeshwarkandari/formaven.git
  - [deleted]         New
 
 14. Git add and delete it
-e.g. $ git add sample.txt
-$ git rm --cached sample.txt
+$ git add sample.txt
+$ git add *.  or $git add fil1 file2 (add multiple files)
+$ git rm --cached sample.txt  and git rm --cached file1 file2
 
 15. How to delete a commit 
 $ git reset --hard HEAD^ ( This will delete the last commit)
