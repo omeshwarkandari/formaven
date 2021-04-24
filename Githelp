@@ -98,7 +98,11 @@ Password for 'https://omeshwarkandari@github.com':
 To https://github.com/omeshwarkandari/formaven.git
  - [deleted]         New
 
-
+14. How to delete a commit 
+$ git reset --hard HEAD^ ( This will delete the last commit)
+$ git reset --hard HEAD^ ( This will reset the last two commits)
+Also we can use below to view as well as remove a commit in the text editor file.
+$ git rebase -i HEAD~2
 
 
 Conflict Handling:
