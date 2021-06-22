@@ -1,25 +1,20 @@
 pipeline {
-    agent any
-    environment {
-        PATH = "/opt/maven/apache-maven-3.6.0/bin:$PATH"
+  agent any
+  stages {
+    stage('Code-Analysis') {
+      environment {
+        SCANNER_HOME = tool 'sonar-scanner'
+        ORGANIZATION = "demo"
+        PROJECT_NAME = "demo_jenkins-pipeline-as-code"
+      }
+      steps {
+        withSonarQubeEnv('Sonarqube-Server') {
+            sh '''$SCANNER_HOME/bin/sonar-scanner -Dsonar.organization=$ORGANIZATION \
+            -Dsonar.java.binaries=build/classes/java/ \
+            -Dsonar.projectKey=$PROJECT_NAME \
+            -Dsonar.sources=.'''
+        }
+      }
     }
-    stages {
-        stage("clone code"){
-            steps{
-                git 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
-            }
-        }
-        stage('Deploy'){  
-            steps {
-                sshagent(['Deploy']) {
-                    sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.86.242:/opt/apache-tomcat-8.5.65/webapps"
-                }
-            }           
-        }    
-   }          
+  }
 }
