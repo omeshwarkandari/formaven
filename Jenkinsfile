@@ -1,19 +1,28 @@
 pipeline {
     agent any
+    environment {
+        PATH = "/opt/maven/apache-maven-3.6.3/bin:$PATH"
+    }
     stages {
+
         stage('SCM') {
             steps {
                 git url: 'https://github.com/omeshwarkandari/formaven.git'
             }
         }
-        stage('build && SonarQube analysis') {
+
+        stage("build code"){
+            steps{
+                sh "mvn clean install"
+            }
+        }
+
+        stage('SonarQube analysis') {
             steps {
-                withSonarQubeEnv('sonar') {
-                    // Optionally use a Maven environment you've configured already
-                    withMaven(maven:'Maven 3.6.3') {
-                        sh 'mvn clean package sonar:sonar'
-                    }
+                environment {
+                 scannerHome = tool 'sonar-scanner' // the name you have given the Sonar Scanner (Global Tool Configuration)
                 }
+                withSonarQubeEnv(installationName:'sonar') 
             }
         }
         stage("Quality Gate") {
