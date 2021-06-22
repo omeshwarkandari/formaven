@@ -1,14 +1,6 @@
 pipeline {
-  agent any
-  environment {
-        PATH = "/opt/maven/apache-maven-3.6.3/bin:$PATH"
-  }
-  stages {
-    stage("build code"){
-            steps{
-                sh "mvn clean install"
-            }
-    }
+    agent any
+   stages {
     stage('SonarCode-Analysis') {
       environment {
         SCANNER_HOME = tool 'sonar-scanner'
