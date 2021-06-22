@@ -5,12 +5,6 @@ pipeline {
     }
     stages {
 
-        stage('SCM') {
-            steps {
-                git url: 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-
         stage("build code"){
             steps{
                 sh "mvn clean install"
