@@ -1,22 +1,20 @@
 pipeline {
     agent any
     stages {
-        stage('SCM') {
-            steps {
-                git url: 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-        stage('build && SonarQube analysis') {
-            steps {
-                withSonarQubeEnv('Sonarqube-Server') {
-                    // Optionally use a Maven environment you've configured already
-                    withMaven(maven:'Maven 3.6.3') {
-                        sh 'mvn clean package sonar:sonar'
-                    }
+        stage('Sonarqube') {
+            environment {
+                scannerHome = tool 'SonarQubeScanner'
+           }
+           steps {
+                withSonarQubeEnv('sonarqube') {
+                    sh "${scannerHome}/bin/sonar-scanner"
                 }
-            }
-        }
-        stage("Quality Gate") {
+                timeout(time: 10, unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+               }
+          }
+       }
+       stage("Quality Gate") {
             steps {
                 timeout(time: 1, unit: 'HOURS') {
                     // Parameter indicates whether to set pipeline to UNSTABLE if Quality Gate fails
@@ -24,6 +22,6 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
-    }
+      }
+   }
 }
