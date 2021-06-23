@@ -1,4 +1,6 @@
-Declrative Pipline: Maven Build and Deploy
+Declrative Piplinee: 
+
+First Pipeline: Maven Build and Deploy
 
 pipeline {
     agent any
@@ -24,4 +26,50 @@ pipeline {
             }           
         }    
    }          
+}
+
+2nd Pipeline: Declrative pipeline for Jenkins and Sonarqube integration.
+Pre-requisites:
+1) On Jenkins Server : Install Sonar Scanner Plug-in and configure
+Global Tool Config - Sonarqube Scanner, System Config - Sonarqube Server and Sonar Analysis Properties in the file /opt/sonar-scanner/conf/sonar-scanner.properties
+Sonarqube Scanner name "sonar-scanner" is based on the SONAR_RUNNER_HOME i.e. /opt/sonar-scanner of the Jenkins Server where sonar scanner plug-in gets installed.
+System Config: Server URL should be http://<sonar-public-ip>:9000/sonar, not sonar/ because this has insered addtional / between sonar /api in the Code Analysis report
+http://sonar-public-ip:9000/sonar/api/ce/task?id=xxxx and Server authentication token is the Token generated on the Sonarqube Server under My Accounts--Security--Token
+2) On the Sonarqube Server:
+Webhook is created under Administrator --Configuration--Webhooks e.g. URL:https//<jenkins-server>/sonarqube-webhook/ and Name:e.g. jenkins
+
+
+pipeline {
+    agent any
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "maven 3.6"
+    }
+    stages {
+        stage("clone code"){
+            steps{
+                git 'https://github.com/omeshwarkandari/formaven.git'
+            }
+        }
+        stage("build code"){
+            steps{
+                sh "mvn clean install"
+            }
+        }
+        stage('Sonar Analysis') {
+            environment { scannerHome = tool 'sonar-scanner' }
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }                
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time:1 , unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
 }
