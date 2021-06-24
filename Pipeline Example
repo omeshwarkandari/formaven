@@ -28,6 +28,7 @@ pipeline {
    }          
 }
 
+
 2nd Pipeline: Declrative pipeline for Jenkins and Sonarqube integration.
 Pre-requisites:
 1) On Jenkins Server : Install Sonar Scanner Plug-in and configure
@@ -37,7 +38,6 @@ System Config: Server URL should be http://<sonar-public-ip>:9000/sonar, not son
 http://sonar-public-ip:9000/sonar/api/ce/task?id=xxxx and Server authentication token is the Token generated on the Sonarqube Server under My Accounts--Security--Token
 2) On the Sonarqube Server:
 Webhook is created under Administrator --Configuration--Webhooks e.g. URL:https//<jenkins-server>/sonarqube-webhook/ and Name:e.g. jenkins
-
 
 pipeline {
     agent any
@@ -64,15 +64,9 @@ pipeline {
                 }                
             }
         }
-        stage("Quality Gate") {
-            steps {
-                timeout(time:1 , unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
     }
 }
+
 
 
 3rd Pipeline: Declrative pipeline for Jenkins, Sonarqube Analyzer and Artifactory:
@@ -115,6 +109,7 @@ pipeline {
             }
         }
     }
+    
     
     
   4th Pipeline - Under Test : Declrative pipeline for Jenkins and Sonarqube with Quality Gate ( Note : Quality Gate stage is not executing correclty)
