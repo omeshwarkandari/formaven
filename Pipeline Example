@@ -78,7 +78,9 @@ pipeline {
 3rd Pipeline: Declrative pipeline for Jenkins, Sonarqube Analyzer and Artifactory:
 # In this pipeline we have added configured Artifactory Plug-in on the Jenkins and added publisher step in the 2nd Pipeline.
 # Artifactory Plug-in will enable JFrog option in the Jenkins System Config and configure the Artifactory JFrog Configuration option as below;
-# Instance ID : <Artifacory Server Name> 
+# Instance ID : <Artifacory Server Name> e.g. "artifactory" , URL : http://<artifactory-server-dns>:8081/<Artifacory Server Name> 
+e.g. http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory, Deploy Credential: user name : <Artifactory User with admin priv>> & Password : <Art. User Passwor>
+Note: URL should be verified in the advance section to ensure additonal thread is not added which may cause issue.
 
 pipeline {
     agent any
@@ -113,3 +115,42 @@ pipeline {
             }
         }
     }
+    
+    
+  4th Pipeline - Under Test : Declrative pipeline for Jenkins and Sonarqube with Quality Gate ( Note : Quality Gate stage is not executing correclty)
+  
+  pipeline {
+    agent any
+    tools {
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "maven 3.6"
+    }
+    stages {
+        stage("clone code"){
+            steps{
+                git 'https://github.com/omeshwarkandari/formaven.git'
+            }
+        }
+        stage("build code"){
+            steps{
+                sh "mvn clean install"
+            }
+        }
+        stage('Sonar Analysis') {
+            environment { scannerHome = tool 'sonar-scanner' }
+            steps {
+                withSonarQubeEnv('sonar') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }                
+            }
+        }
+        stage("Quality Gate") {
+            steps {
+                timeout(time:1 , unit: 'MINUTES') {
+                    waitForQualityGate abortPipeline: true
+                }
+            }
+        }
+    }
+}
+
