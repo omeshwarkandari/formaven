@@ -72,9 +72,11 @@ pipeline {
 3rd Pipeline: Declrative pipeline for Jenkins, Sonarqube Analyzer and Artifactory:
 # In this pipeline we have added configured Artifactory Plug-in on the Jenkins and added publisher step in the 2nd Pipeline.
 # Artifactory Plug-in will enable JFrog option in the Jenkins System Config and configure the Artifactory JFrog Configuration option as below;
-# Instance ID : <Artifacory Server Name> e.g. "artifactory" , URL : http://<artifactory-server-dns>:8081/<Artifacory Server Name> 
-e.g. http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory, Deploy Credential: user name : <Artifactory User with admin priv>> & Password : <Art. User Passwor>
-Note: URL should be verified in the advance section to ensure additonal thread is not added which may cause issue.
+# Instance ID : <Artifacory Server Name> e.g. "artifactory" 
+# URL : http://<artifactory-server-dns>:8081/<Artifacory Server Name> e.g. http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory
+# Deploy Credential: user name : <Artifactory User with admin priv>> & Password : <Art. User Password> by selecting "treat user name as secret". 
+Note: Test Connection by selecting ID which will provide the o/p like "Found Artifactory version on http://<artifactory-server-dns>:8081/<Artifacory Server Name>
+ and URL should be verified in the advance section to ensure additonal thread is not added which may cause issue and Credential should be set-up with 
 
 pipeline {
     agent any
@@ -111,8 +113,8 @@ pipeline {
     }
     
     
-    
-  4th Pipeline - Under Test : Declrative pipeline for Jenkins and Sonarqube with Quality Gate ( Note : Quality Gate stage is not executing correclty)
+  Under Testing: 
+  4th Pipeline : Declrative pipeline for Jenkins and Sonarqube with Quality Gate ( Note : Quality Gate stage is not executing correclty)
   
   pipeline {
     agent any
