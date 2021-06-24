@@ -13,6 +13,11 @@ pipeline {
 
         stage ('Artifactory configuration') {
             steps {
+                rtServer (
+                    id: "artifactory",
+                    url: "http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory",
+                    credentialsId: admin
+                )
                 rtMavenDeployer (
                     id: "MAVEN_DEPLOYER",
                     serverId: "artifactory",
