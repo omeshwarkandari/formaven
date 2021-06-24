@@ -5,47 +5,24 @@ pipeline {
         maven "maven 3.6"
     }
     stages {
-        stage ('Clone') {
-            steps {
-               git 'https://github.com/omeshwarkandari/formaven.git'
+        stage("clone code"){
+            steps{
+                git 'https://github.com/omeshwarkandari/formaven.git'
             }
         }
-
-        stage ('Artifactory configuration') {
-            steps {
-                rtServer (
-                    id: "artifactory",
-                    url: "http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory",
-                    credentialsId: admin
-                )
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "artifactory",
-                    releaseRepo: example-repo-local,
-                    snapshotRepo: example-repo-local
-                )
-
-                rtMavenResolver (
-                    id: "MAVEN_RESOLVER",
-                    serverId: "artifactory",
-                    releaseRepo: example-repo-local,
-                    snapshotRepo: example-repo-local
-                )
+        stage("build code"){
+            steps{
+                sh "mvn clean install"
             }
         }
-
-        stage ('Exec Maven') {
+        stage('Sonar Analysis') {
+            environment { scannerHome = tool 'sonar-scanner' }
             steps {
-                rtMavenRun (
-                    tool: MAVEN_TOOL, // Tool name from Jenkins configuration
-                    pom: 'pom.xml',
-                    goals: 'clean install',
-                    deployerId: "MAVEN_DEPLOYER",
-                    resolverId: "MAVEN_RESOLVER"
-                )
+                withSonarQubeEnv('sonar') {
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }                
             }
         }
-
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
