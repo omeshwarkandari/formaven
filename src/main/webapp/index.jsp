@@ -28,7 +28,7 @@
 		<br><br>
 		<a href="#" id="run_button" class="btn btn-success" onclick="skl_form.submit();">Your feedback matters!</a>
 	</form>
-	<br><br>CICD Test for Sonar and Artifactory v2
+	<br><br>CICD Test for Sonar and Artifactory v1
 </body>
 
 </html>
