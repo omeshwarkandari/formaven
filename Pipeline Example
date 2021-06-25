@@ -36,87 +36,10 @@ Global Tool Config - Sonarqube Scanner, System Config - Sonarqube Server and Son
 Sonarqube Scanner name "sonar-scanner" is based on the SONAR_RUNNER_HOME i.e. /opt/sonar-scanner of the Jenkins Server where sonar scanner plug-in gets installed.
 System Config: Server URL should be http://<sonar-public-ip>:9000/sonar, not sonar/ because this has insered addtional / between sonar /api in the Code Analysis report
 http://sonar-public-ip:9000/sonar/api/ce/task?id=xxxx and Server authentication token is the Token generated on the Sonarqube Server under My Accounts--Security--Token
-2) On the Sonarqube Server:
-Webhook is created under Administrator --Configuration--Webhooks e.g. URL:https//<jenkins-server>/sonarqube-webhook/ and Name:e.g. jenkins
+2) On the Sonarqube Server: Webhook is created under Administrator --Configuration--Webhooks, Syntax:  URL:https//<jenkins-server>/sonarqube-webhook/ 
+e.g. http://3.88.145.211:8080//sonarqube-webhook/ ( We are using the junkins web access portal which is < jenkins Public IP : Port >
 
 pipeline {
-    agent any
-    tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "maven 3.6"
-    }
-    stages {
-        stage("clone code"){
-            steps{
-                git 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
-            }
-        }
-        stage('Sonar Analysis') {
-            environment { scannerHome = tool 'sonar-scanner' }
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }                
-            }
-        }
-    }
-}
-
-
-
-3rd Pipeline: Declrative pipeline for Jenkins, Sonarqube Analyzer and Artifactory:
-# In this pipeline we have added configured Artifactory Plug-in on the Jenkins and added publisher step in the 2nd Pipeline.
-# Artifactory Plug-in will enable JFrog option in the Jenkins System Config and configure the Artifactory JFrog Configuration option as below;
-# Instance ID : <Artifacory Server Name> e.g. "artifactory" 
-# URL : http://<artifactory-server-dns>:8081/<Artifacory Server Name> e.g. http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory
-# Deploy Credential: user name : <Artifactory User with admin priv>> & Password : <Art. User Password> by selecting "treat user name as secret". 
-Note: Test Connection by selecting ID which will provide the o/p like "Found Artifactory version on http://<artifactory-server-dns>:8081/<Artifacory Server Name>
- and URL should be verified in the advance section to ensure additonal thread is not added which may cause issue and Credential should be set-up with 
-
-pipeline {
-    agent any
-    tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "maven 3.6"
-    }
-    stages {
-        stage("clone code"){
-            steps{
-                git 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
-            }
-        }
-        stage('Sonar Analysis') {
-            environment { scannerHome = tool 'sonar-scanner' }
-            steps {
-                withSonarQubeEnv('sonar') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }                
-            }
-        }
-        stage ('Publish build info') {
-            steps {
-                rtPublishBuildInfo (
-                    serverId: "artifactory"
-                )
-            }
-        }
-    }
-    
-    
-  Under Testing: 
-  4th Pipeline : Declrative pipeline for Jenkins and Sonarqube with Quality Gate ( Note : Quality Gate stage is not executing correclty)
-  
-  pipeline {
     agent any
     tools {
         // Install the Maven version configured as "M3" and add it to the path.
@@ -143,11 +66,21 @@ pipeline {
         }
         stage("Quality Gate") {
             steps {
-                timeout(time:1 , unit: 'MINUTES') {
+                timeout(time:5 , unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
     }
 }
+
+
+3rd Pipeline: Declrative pipeline for Jenkins, Sonarqube Analyzer and Artifactory:
+# In this pipeline we have added configured Artifactory Plug-in on the Jenkins and added publisher step in the 2nd Pipeline.
+# Artifactory Plug-in will enable JFrog option in the Jenkins System Config and configure the Artifactory JFrog Configuration option as below;
+# Instance ID : <Artifacory Server Name> e.g. "artifactory" 
+# URL : http://<artifactory-server-dns>:8081/<Artifacory Server Name> e.g. http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory
+# Deploy Credential: user name : <Artifactory User with admin priv>> & Password : <Art. User Password> by selecting "treat user name as secret". 
+Note: Test Connection by selecting ID which will provide the o/p like "Found Artifactory version on http://<artifactory-server-dns>:8081/<Artifacory Server Name>
+and URL should be verified in the advance section to ensure additonal thread is not added which may cause issue and Credential should be set-up with 
 
