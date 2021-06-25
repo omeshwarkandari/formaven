@@ -38,7 +38,7 @@ Sonarqube Scanner name "sonar-scanner" is based on the SONAR_RUNNER_HOME i.e. /o
 System Config: Server URL should be http://<sonar-public-ip>:9000/sonar, not sonar/ because this has insered addtional / between sonar /api in the Code Analysis report
 http://sonar-public-ip:9000/sonar/api/ce/task?id=xxxx and Server authentication token is the Token generated on the Sonarqube Server under My Accounts--Security--Token
 2) On the Sonarqube Server: Webhook is created under Administrator --Configuration--Webhooks, Syntax:  URL:https//<jenkins-server>/sonarqube-webhook/ to enable Sonarqube 
-Server connecivity with Jenkins Server e.g. URL: http://3.88.145.211:8080//sonarqube-webhook/portal  and Name : jenkins (a random name )
+Server connecivity with Jenkins Server e.g. URL: http://3.88.145.211:8080//sonarqube-webhook/portal  and Name : jenkins (a random name as tested with name "test" as well )
 
 
 pipeline {
