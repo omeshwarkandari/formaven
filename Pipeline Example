@@ -1,31 +1,48 @@
 Declrative Piplinee: 
 
 First Pipeline: Maven Build and Deploy
+# Declrative Pipepline to clone Git repo, create a maven build and deploy on to tomcat server.
+Pre-requistes:
+1) Jenkins Server : 
+Installation: Java/Maven/Git/Jenkins 
+Environment set-up: Global Tool - Java/MAVEN/GIT configured in the Global Tool , Plug-in - Copy artifcat/ deploy/ ssh client alongwith plug-in installed on intial set-up.
+2) Tomcat Server : Java/Tomcat installed and access to app user on the detination location in the Deploy Stage.
+3) Use Pipeline Syntax to gnerate script syntax based on the sample step tool: use a tool from a pre-defined Tool Installation, sshagent:SSH Agent, sh:shell script ....
+
 
 pipeline {
-    agent any
-    environment {
-        PATH = "/opt/maven/apache-maven-3.6.0/bin:$PATH"
+    agent any  //In the Test envionment we are declaring buil to happen on any agent, however, in the Production set-up we should define a node/host where to run the build
+    tools {
+        maven "Maven 3.6"  // Select tool as mavne to generates script which is " tool name: 'Maven 3.6', type: 'maven' " 
     }
     stages {
-        stage("clone code"){
-            steps{
-                git 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
-            }
-        }
-        stage('Deploy'){  
+        stage ('clone repo') {
             steps {
-                sshagent(['Deploy']) {
-                    sh "scp -o StrictHostKeyChecking=no target/*.war ec2-user@172.31.86.242:/opt/apache-tomcat-8.5.65/webapps"
-                }
-            }           
-        }    
-   }          
+                git "https://github.com/omeshwarkandari/formaven.git"   // Select tool as git > tool name: 'Default', type: 'git'
+            }
+        }
+        stage ('build') {
+            steps {
+                sh " mvn clean install"  // Select sh and if we fill mvn clean install > sh 'mvn clean install'
+            }
+        }
+        stage ('deploy') {
+            steps {
+                sshagent(['tomcat8']) {
+                   sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/test1/target/*.war ec2-user@172.31.80.190:/opt/apache-tomcat-8.5.68/webapps"
+
+                   // Select sshsgent: add jenkins authetication with SSH Username with private key option where user name is application user & private key is the *.pem     //e.g. here, user name: ec2-user & private key : cat test1.pem because ec2-user is authorized to ssh on the tomcat server runing on the ec2-instance.
+                   // Generate Pipeline > sshagent(['tomcat8']) { // some block }
+                   // Some blok click on help beside ssgagent menu >  sh 'ssh -o StrictHostKeyChecking=no -l cloudbees 192.168.1.106 uname -a'
+                   // 'ssh -o StrictHostKeyChecking=no -l cloudbees 192.168.1.106 uname -a' is modified as 'scp -o StrictHostKeyChecking=no srcuser@host:dest'
+                   // we have replaced ssh by scp as we need to copy artifacts from the source which is /var/lib/jenkins/workspace/test1/target/*.war
+                   // user@host : ec2-user@tomcat-server IP-Address and Destination: /opt/apache-tomcat-8.5.68/webapps in this case of tomcat server so access to ec2-useer on the destination is required to write the war file to avoid permission deny.
+                   // -o StrictHostKeyChecking=no is added to mitigate the *.pem authetication issue while ruining the dploy job.
+                   // Ideally src "var/lib/jenkins/workspace/Project Name" should be picked automatically and we should only define path to artifact afer Project Name but its throwing some error so in oir case sh "scp -o StrictHostKeyChecking=no **/*.war ec2-user@172.31.80.190:/opt/apache-tomcat-8.5.68/webapps" is working.
+                }                
+            }
+        }
+    }
 }
 
 
