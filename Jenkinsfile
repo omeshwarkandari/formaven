@@ -1,40 +1,24 @@
 pipeline {
     agent any
     tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "maven 3.6"
+        maven "Maven 3.6"
     }
     stages {
-        stage("clone code"){
-            steps{
-                git 'https://github.com/omeshwarkandari/formaven.git'
-            }
-        }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
-            }
-        }
-        stage('Sonar Analysis') {
-            environment { scannerHome = tool 'sonar-scanner' }
+        stage ('clone repo') {
             steps {
-                withSonarQubeEnv('sonar') {
-                    sh "${scannerHome}/bin/sonar-scanner"
-                }                
+                git "https://github.com/omeshwarkandari/formaven.git"
             }
         }
-        stage("Quality Gate") {
+        stage ('build') {
             steps {
-                timeout(time:1 , unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
+                sh " mvn clean install"
+            }
+        }
+        stage ('deploy') {
+            steps {
+                sshagent(['tomcat8']) {
+                   sh "scp -o StrictHostKeyChecking=no **/*.war ec2-user@172.31.80.190:/opt/apache-tomcat-8.5.68/webapps"
                 }
-            }
-        }
-        stage ('Publish build info') {
-            steps {
-                rtPublishBuildInfo (
-                    serverId: "artifactory"
-                )
             }
         }
     }
