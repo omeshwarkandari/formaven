@@ -1,7 +1,8 @@
 pipeline {
     agent any
     tools {
-       maven "maven 3.6"
+        // Install the Maven version configured as "M3" and add it to the path.
+        maven "maven 3.6"
     }
     stages {
         stage("clone code"){
@@ -29,12 +30,22 @@ pipeline {
                 }
             }
         }
+        stage('deploy to artifactory'){
+            steps {
+                rtMavenDeployer (
+                    id: "MAVEN_DEPLOYER",
+                    serverId: "artifactory",
+                    releaseRepo: libs-release-local,
+                    snapshotRepo: libs-snapshot-local
+                )
+            }
+        }
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
                     serverId: "artifactory"
                 )
             }
-        }        
+        }
     }
 }
