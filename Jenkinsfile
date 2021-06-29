@@ -1,20 +1,40 @@
 pipeline {
     agent any
-    tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "maven 3.6"
-    }
     stages {
-        stage("clone code"){
+        stage('clone code'){
             steps{
                 git 'https://github.com/omeshwarkandari/formaven.git'
             }
         }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
+        stage ('Artifactory configuration') {
+            steps {
+                rtMavenDeployer (
+                    id: 'DEPLOYER',
+                    serverId: 'artifactory',
+                    releaseRepo: 'libs-release-local',
+                    snapshotRepo: 'libs-snapshot-local',
+                    properties: ['key1=valu1', 'key2=value2']
+                )
+
+                rtMavenResolver (
+                    id: 'RESOLVER',
+                    serverId: 'artifactory',
+                    releaseRepo: 'libs-release',
+                    snapshotRepo: 'libs-snapshot'
+                )
             }
         }
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    tool: 'maven 3.6',   
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: 'DEPLOYER',
+                    resolverId: 'RESOLVER'
+                )
+            }
+        }        
         stage('Sonar Analysis') {
             environment { scannerHome = tool 'sonar-scanner' }
             steps {
@@ -30,22 +50,26 @@ pipeline {
                 }
             }
         }
-        stage('deploy to artifactory'){
-            steps {
-                rtMavenDeployer (
-                    id: "MAVEN_DEPLOYER",
-                    serverId: "artifactory",
-                    releaseRepo: libs-release-local,
-                    snapshotRepo: libs-snapshot-local
-                )
-            }
-        }
+        
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "artifactory"
+                    serverId: 'artifactory'
+                )
+            
+                rtAddInteractivePromotion (
+                    serverId: 'artifactory',
+                    buildName: JOB_NAME,
+                    buildNumber: BUILD_NUMBER
                 )
             }
         }
+        stage ('deploy') {
+            steps {
+                sshagent(['tomcat8']) {
+                   sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/test1/target/*.war ec2-user@172.31.80.190:/opt/apache-tomcat-8.5.68/webapps"
+               }
+           }
+       }
     }
 }
