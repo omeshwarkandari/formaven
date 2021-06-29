@@ -97,29 +97,65 @@ pipeline {
 3rd Pipeline: Declrative pipeline for Jenkins, Sonarqube Analyzer and Artifactory: Code passed by Quality Gate is pushed in the Artifcatory Repository for Deployment.
 # In this pipeline we have added configured Artifactory Plug-in on the Jenkins and added publisher step in the 2nd Pipeline.
 # Artifactory Plug-in will enable JFrog option in the Jenkins System Config and configure the Artifactory JFrog Configuration option as below;
-# Instance ID : <Artifacory Server Name> e.g. "artifactory" 
+# Instance ID : <Artifacory Server Name> e.g. "artifactory" and this will also be the Artifactory Server ID duirng the pipeline scripts.
 # URL : http://<artifactory-server-dns>:8081/<Artifacory Server Name> e.g. http://ec2-54-89-19-142.compute-1.amazonaws.com:8081/artifactory
-# Deploy Credential: user name : <Artifactory User with admin priv>> & Password : <Art. User Password> by selecting "treat user name as secret". 
-Note: Test Connection by selecting ID which will provide the o/p like "Found Artifactory version on http://<artifactory-server-dns>:8081/<Artifacory Server Name>
-and URL should be verified in the advance section to ensure additonal thread is not added which may cause issue and Credential should be set-up with 
+# After setting the artifacory name or id and URL also copy this URL in the avanced section before setting the Default Deployer Credentials.
+# Deploy Credential: user name : <Artifactory User with admin priv> e.g. admin or user craeted with admin privelege & Password : password or <User Password>  
+# Test Connection which should show the version of the artifactory in use e.g. Found Artifactory 6.9.6 on http://ec2-54-236-103-126.compute-1.amazonaws.com:8081/artifactory
+Note: stage ('Exec Maven') has refined the pipeline by removing the explicit Maven Tool & additonal Maven Build stage.  
+# tool: 'maven 3.6' (maven 3.6 is based on the Name of the Maven envionment set on the Jenkins Global Configuration so this input depends on the jenkins config)
+# pom: 'pom.xml' ("pom.xml" selected because pom.xml file is in the root of SRC and if pom.xml is not in the root then we should selecet "maven-example/pom.xml")
+# Stage Artifactory Configuration: To integrate artifactory with jenkins as well as where to publish the artifacts. Since we have used artifactory plug-in so the first step is 
+not required. The resolver helps in resolving dependencies while deployer helps in deploying the aritifcats in line of pom.xml contents. The artifcat is published into Release or Snapshot Repo based on pom.xml content ( <version>xxxxx</version>) whree 
+<xxx> =  <version>2.17-SNAPSHOT</version> means artifcats is deployed into libs-snapshot-local while <version>1</version> is pushed as release into libs-release-local.
+First Step: Not required due to Artifactory plug-in set-up above.
+rtServer (                                                                      Our manula set-up using plug-in: 
+           id: "artifactory-server-id",                                                         id: "artifactory",
+           url: "http:art-server:port/artifactory",                                             url: "http://ec2-54-236-103-126.compute-1.amazonaws.com:8081/artifactory",
+           server.username = 'new-user-name'                                                    server.username = 'test',
+           server.password = 'new-password'                                                     server.password = 'test@123'
+         )      
+Also credentialsId: "xxxxxxx" can be used to replace both name & password.
+# Interactive Promo stage is used for promoting build once its built.
+
 
 pipeline {
     agent any
-    tools {
-        // Install the Maven version configured as "M3" and add it to the path.
-        maven "maven 3.6"
-    }
     stages {
-        stage("clone code"){
+        stage('clone code'){
             steps{
                 git 'https://github.com/omeshwarkandari/formaven.git'
             }
         }
-        stage("build code"){
-            steps{
-                sh "mvn clean install"
+        stage ('Artifactory configuration') {
+            steps {
+                rtMavenDeployer (
+                    id: 'DEPLOYER',
+                    serverId: 'artifactory',
+                    releaseRepo: 'libs-release-local',
+                    snapshotRepo: 'libs-snapshot-local',
+                    properties: ['key1=valu1', 'key2=value2']
+                )
+
+                rtMavenResolver (
+                    id: 'RESOLVER',
+                    serverId: 'artifactory',
+                    releaseRepo: 'libs-release',
+                    snapshotRepo: 'libs-snapshot'
+                )
             }
         }
+        stage ('Exec Maven') {
+            steps {
+                rtMavenRun (
+                    tool: 'maven 3.6',   
+                    pom: 'pom.xml',
+                    goals: 'clean install',
+                    deployerId: 'DEPLOYER',
+                    resolverId: 'RESOLVER'
+                )
+            }
+        }        
         stage('Sonar Analysis') {
             environment { scannerHome = tool 'sonar-scanner' }
             steps {
@@ -135,15 +171,24 @@ pipeline {
                 }
             }
         }
+        
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
-                    serverId: "artifactory"
+                    serverId: 'artifactory'
+                )
+            
+                rtAddInteractivePromotion (
+                    serverId: 'artifactory',
+                    buildName: JOB_NAME,
+                    buildNumber: BUILD_NUMBER
                 )
             }
         }
     }
 }
+
+
 
 
 4th Pipeline: Code Build/ Analyzed / Archieved and Deployed on the Tomcat.
