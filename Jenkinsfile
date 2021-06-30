@@ -74,7 +74,7 @@ pipeline {
         stage ('deploy') {
             steps {
                 sshagent(['tomcat8']) {
-                   sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/CICD-test/target/*.war ec2-user@172.31.80.190:/opt/apache-tomcat-8.5.68/webapps"
+                   sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/CICD/target/*.war ec2-user@172.31.80.190:/opt/apache-tomcat-8.5.68/webapps"
                }
            }
        }
