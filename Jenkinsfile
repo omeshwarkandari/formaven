@@ -67,6 +67,7 @@ pipeline {
                     deleteBuildArtifacts: true
                     // Using the Jenkins job's build name and number.
                 )
+            }
         }        
         stage ('Publish build info') {
             steps {
