@@ -8,6 +8,13 @@ pipeline {
         }
         stage ('Artifactory configuration') {
             steps {
+                rtServer (
+                    id: 'artifactory',
+                    url: 'http://3.87.239.247:8081/artifactory',
+                    username: 'test',
+                    password: 'test@123'
+                    
+                )
                 rtMavenDeployer (
                     id: 'DEPLOYER',
                     serverId: 'artifactory',
