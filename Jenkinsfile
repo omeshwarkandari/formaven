@@ -57,20 +57,24 @@ pipeline {
                 }
             }
         }
-        
+        stage ('Configure build info') {
+            steps {
+                rtBuildInfo (
+                    // Build retention:
+                    maxBuilds: 2,
+                    maxDays: 1,
+                    doNotDiscardBuilds: ["3"],
+                    deleteBuildArtifacts: true
+                    // Using the Jenkins job's build name and number.
+                )
+        }        
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
                     serverId: 'artifactory'
                 )
-            
-                rtAddInteractivePromotion (
-                    serverId: 'artifactory',
-                    buildName: JOB_NAME,
-                    buildNumber: BUILD_NUMBER
-                )
             }
-        }
+        }       
         stage ('deploy') {
             steps {
                 sshagent(['tomcat8']) {
