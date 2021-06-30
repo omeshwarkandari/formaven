@@ -56,19 +56,7 @@ pipeline {
                     waitForQualityGate abortPipeline: true
                 }
             }
-        }
-        stage ('Configure build info') {
-            steps {
-                rtBuildInfo (
-                    // Build retention:
-                    maxBuilds: 2,
-                    maxDays: 1,
-                    doNotDiscardBuilds: ["3"],
-                    deleteBuildArtifacts: true
-                    // Using the Jenkins job's build name and number.
-                )
-            }
-        }        
+        }            
         stage ('Publish build info') {
             steps {
                 rtPublishBuildInfo (
@@ -82,6 +70,24 @@ pipeline {
                    sh "scp -o StrictHostKeyChecking=no /var/lib/jenkins/workspace/CICD/target/*.war ec2-user@172.31.80.190:/opt/apache-tomcat-8.5.68/webapps"
                }
            }
+       }
+       stage ('download') {
+            steps {
+                rtdownload (
+                    serverId: 'artifactory',
+                    spec: ''' {
+                        "files": [
+                            {
+                                "pattern": "libs-snapshot-local/org/springframework/HelloWorld/3.7-SNAPSHOT/",
+                                "target": "/var/lib/jenkins/workspace/CICD/target/"
+                            }
+                        ]
+                    }''',
+
+                    buildName: 'CICD',
+                    buildNumber: '4'
+                )
+            }
        }
     }
 }
