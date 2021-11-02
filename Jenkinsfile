@@ -7,10 +7,8 @@ pipeline {
         }
       }
       stage ('test') {
-          steps { 'test the code'}
       }
       stage ('build')	 {
-          steps { 'build the code'}
       }
 	}
 }
