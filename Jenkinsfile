@@ -1,15 +1,13 @@
 node {  
-  stages {
-    stage ('clone repo') {
-        steps {
-          git 'https://github.com/omeshwarkandari/formaven.git'
-        }
+  stage ('clone repo') {
+    steps {
+      git 'https://github.com/omeshwarkandari/formaven.git'
     }    
-    stage ('build')  {         
+  }
+  stage ('build')  {         
       echo "building"        
-    }
-    stage ('test') {  
+  }
+  stage ('test') {  
       echo "testing"          
-    }
   }
 }
