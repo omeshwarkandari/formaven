@@ -5,9 +5,12 @@ pipeline {
         steps {
           git 'https://github.com/omeshwarkandari/formaven.git'
         }
-        stage ('test') {
-        }
-        stage ('build')	 {
-        }
+      }
+      stage ('test') {
+          steps { 'test the code'}
+      }
+      stage ('build')	 {
+          steps { 'build the code'}
+      }
 	}
 }
