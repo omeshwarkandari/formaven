@@ -19,7 +19,7 @@ origin	https://github.com/omeshwarkandari/formaven.git (push)
 
 6.	Configure the access for new Repo Global and Local if needed and authentication
 $ git config --global user.email " omeshwarkandari@gmail.com"
-$ git-clone@ubuntu:~$ git config --global user.name "omeshwarkandari"
+$ git config --global user.name "omeshwarkandari"
 
 Toekn based authentication is required and a hack belwo wroks:
 git remote set-url origin https://[githubtoken]@github.com/[username]/[repositoryname].git
